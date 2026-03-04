@@ -35,11 +35,11 @@ import axios from 'axios';
 
 
 export const api = axios.create({
-  // O Vite usa import.meta.env para ler as variáveis
+  // Use crases (backticks) para permitir o uso de ${}
   baseURL: `https://api.jsonbin.io/v3/b/${import.meta.env.VITE_JSONBIN_ID}`,
   headers: {
     'X-Master-Key': import.meta.env.VITE_JSONBIN_KEY,
-    'X-Bin-Meta': 'false',
+    'X-Bin-Meta': 'false', // Crucial para não precisar mudar res.data para res.data.record
     'Content-Type': 'application/json'
   }
 });

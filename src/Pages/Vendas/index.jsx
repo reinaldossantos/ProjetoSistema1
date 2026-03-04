@@ -16,10 +16,19 @@ export function Vendas() {
   //   carregarVendas();
   // }, []);
 
-   useEffect(() => {
-  api.get('/').then(res => {
-    setVendas(res.data.vendas || []); 
-  });
+//    useEffect(() => {
+//   api.get('/').then(res => {
+//     setVendas(res.data.vendas || []); 
+//   });
+// }, []);
+
+useEffect(() => {
+  api.get('/') // No JSONBin usamos a raiz '/'
+    .then(res => {
+      // Graças ao X-Bin-Meta: false, os dados vêm diretos
+      setVendas(res.data.vendas || []); 
+    })
+    .catch(err => console.error("Erro AGROVIDA:", err));
 }, []);
 
   // AGORA A VARIÁVEL 'vendas' EXISTE AQUI DENTRO DO COMPONENTE
