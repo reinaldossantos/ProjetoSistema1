@@ -12,9 +12,19 @@ export function Produtos() {
     api.get('/vendas').then(res => setVendas(res.data));
   }
 
+  // useEffect(() => {
+  //   carregarDados();
+  // }, []);
+
   useEffect(() => {
-    carregarDados();
-  }, []);
+  api.get('/') // No JSONBin, como o ID já está na URL base, usamos apenas '/'
+    .then(res => {
+      // O JSONBin coloca seus dados dentro de 'record'
+      setProdutos(res.data.record.produtos); 
+    })
+    .catch(err => console.error(err));
+}, []);
+
 
   async function excluirProduto(id, nome) {
     // REGRA DE NEGÓCIO: Verifica se o produto já foi vendido

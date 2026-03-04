@@ -12,9 +12,18 @@ export function Vendas() {
       .catch(err => console.error("Erro ao carregar vendas:", err));
   }
 
-  useEffect(() => {
-    carregarVendas();
-  }, []);
+  // useEffect(() => {
+  //   carregarVendas();
+  // }, []);
+
+   useEffect(() => {
+  api.get('/') // No JSONBin, como o ID já está na URL base, usamos apenas '/'
+    .then(res => {
+      // O JSONBin coloca seus dados dentro de 'record'
+      setVendas(res.data.record.vendas); 
+    })
+    .catch(err => console.error(err));
+}, []);
 
   // AGORA A VARIÁVEL 'vendas' EXISTE AQUI DENTRO DO COMPONENTE
   const faturamentoTotal = vendas.reduce((acc, curr) => acc + (Number(curr.valorTotal) || 0), 0);

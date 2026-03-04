@@ -12,9 +12,19 @@ export function Clientes() {
     api.get("/vendas").then((res) => setVendas(res.data));
   }
 
+  // useEffect(() => {
+  //   carregarDados();
+  // }, []);
+
   useEffect(() => {
-    carregarDados();
-  }, []);
+  api.get('/') // No JSONBin, como o ID já está na URL base, usamos apenas '/'
+    .then(res => {
+      // O JSONBin coloca seus dados dentro de 'record'
+      setClientes(res.data.record.clientes); 
+    })
+    .catch(err => console.error(err));
+}, []);
+
 
   async function excluirCliente(id, nomeFazenda) {
     const temCompras = vendas.some((v) => v.clienteNome === nomeFazenda);
