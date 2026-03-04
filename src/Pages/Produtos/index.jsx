@@ -17,12 +17,9 @@ export function Produtos() {
   // }, []);
 
   useEffect(() => {
-  api.get('/') // No JSONBin, como o ID já está na URL base, usamos apenas '/'
-    .then(res => {
-      // O JSONBin coloca seus dados dentro de 'record'
-      setProdutos(res.data.record.produtos); 
-    })
-    .catch(err => console.error(err));
+  api.get('/').then(res => {
+    setProdutos(res.data.produtos || []); 
+  });
 }, []);
 
 

@@ -17,35 +17,49 @@ export function Clientes() {
   // }, []);
 
   useEffect(() => {
-  api.get('/') // No JSONBin, como o ID já está na URL base, usamos apenas '/'
-    .then(res => {
-      // O JSONBin coloca seus dados dentro de 'record'
-      setClientes(res.data.record.clientes); 
-    })
-    .catch(err => console.error(err));
+  api.get('/').then(res => {
+    // Se o banco estiver vazio, garante que seja um array para não dar erro
+    setClientes(res.data.clientes || []); 
+  });
 }, []);
 
 
+  // async function excluirCliente(id, nomeFazenda) {
+  //   const temCompras = vendas.some((v) => v.clienteNome === nomeFazenda);
+
+  //   if (temCompras) {
+  //     toast.error(
+  //       "Proibido excluir: Este cliente já possui histórico de compras!",
+  //     );
+  //     return;
+  //   }
+
+  //   if (window.confirm(`Excluir a fazenda ${nomeFazenda} do sistema?`)) {
+  //     try {
+  //       await api.delete(`/clientes/${id}`);
+  //       toast.success("Cliente removido com sucesso!");
+  //       carregarDados();
+  //     } catch (error) {
+  //       toast.error("Erro ao excluir cliente.");
+  //     }
+  //   }
+  // }
+
   async function excluirCliente(id, nomeFazenda) {
-    const temCompras = vendas.some((v) => v.clienteNome === nomeFazenda);
+  const resposta = await api.get('/');
+  const banco = resposta.data;
 
-    if (temCompras) {
-      toast.error(
-        "Proibido excluir: Este cliente já possui histórico de compras!",
-      );
-      return;
-    }
-
-    if (window.confirm(`Excluir a fazenda ${nomeFazenda} do sistema?`)) {
-      try {
-        await api.delete(`/clientes/${id}`);
-        toast.success("Cliente removido com sucesso!");
-        carregarDados();
-      } catch (error) {
-        toast.error("Erro ao excluir cliente.");
-      }
-    }
+  const temCompras = banco.vendas?.some(v => v.clienteNome === nomeFazenda);
+  if (temCompras) {
+    toast.error("Proibido: Este cliente já tem histórico de compras!");
+    return;
   }
+
+  const novosClientes = banco.clientes.filter(c => c.id !== id);
+  await api.put('/', { ...banco, clientes: novosClientes });
+  toast.success("Cliente removido!");
+  carregarDados();
+}
 
   return (
     <div className="p-8 max-w-6xl mx-auto">

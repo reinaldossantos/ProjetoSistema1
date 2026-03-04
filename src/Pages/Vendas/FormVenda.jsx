@@ -25,26 +25,53 @@ useEffect(() => {
     .catch(err => console.error("Erro ao buscar produtos no form:", err));
 }, []);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  // async function handleSubmit(e) {
+  //   e.preventDefault();
     
-    // Busca os nomes para salvar no histórico (Denormalização para facilitar o relatório financeiro)
-    const cliente = clientes.find(c => c.id === venda.clienteId);
-    const produto = produtos.find(p => p.id === venda.produtoId);
-    const valorTotal = produto.preco * venda.quantidade;
+  //   // Busca os nomes para salvar no histórico (Denormalização para facilitar o relatório financeiro)
+  //   const cliente = clientes.find(c => c.id === venda.clienteId);
+  //   const produto = produtos.find(p => p.id === venda.produtoId);
+  //   const valorTotal = produto.preco * venda.quantidade;
 
-    const novaVenda = {
-      clienteNome: cliente.nomeFazenda,
-      produtoNome: produto.nome,
-      quantidade: Number(venda.quantidade),
-      valorTotal: valorTotal,
-      data: new Date().toLocaleDateString()
-    };
+  //   const novaVenda = {
+  //     clienteNome: cliente.nomeFazenda,
+  //     produtoNome: produto.nome,
+  //     quantidade: Number(venda.quantidade),
+  //     valorTotal: valorTotal,
+  //     data: new Date().toLocaleDateString()
+  //   };
 
-    await api.post('/vendas', novaVenda);
-    toast.success("Venda registrada com sucesso!");
-    onVendaRealizada(); // Atualiza a lista automaticamente
-  }
+  //   await api.post('/vendas', novaVenda);
+  //   toast.success("Venda registrada com sucesso!");
+  //   onVendaRealizada(); // Atualiza a lista automaticamente
+  // }
+
+  async function handleSubmit(e) {
+  e.preventDefault();
+  
+  // 1. Primeiro, buscamos o "baú" completo do JSONBin
+  const resposta = await api.get('/');
+  const bancoCompleto = resposta.data;
+
+  // 2. Preparamos a nova venda
+  const novaVenda = { 
+    id: Date.now(), // Gerando um ID único manualmente
+    clienteNome: cliente Selecionado, 
+    /* ... outros campos ... */ 
+  };
+
+  // 3. Atualizamos APENAS a gaveta de vendas, mantendo o resto
+  const bancoAtualizado = {
+    ...bancoCompleto,
+    vendas: [...(bancoCompleto.vendas || []), novaVenda]
+  };
+
+  // 4. Enviamos o baú inteiro de volta usando PUT
+  await api.put('/', bancoAtualizado);
+  
+  toast.success("Venda registrada na nuvem!");
+  onVendaRealizada();
+}
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-8 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
