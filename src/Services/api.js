@@ -24,12 +24,22 @@ import axios from 'axios';
 
 
 
+// export const api = axios.create({
+//   baseURL: 'https://api.jsonbin.io/v3/b/69a8839143b1c97be9b396bc',
+//   headers: {
+//     'X-Master-Key': '$2b$10$apRIu09wR5tmKKJDSBbv/umKs23JlM4Rqy17snJlgdOa0UEMEsI3S', 
+//     'X-Bin-Meta': 'false', // Isso faz os dados virem puros, sem precisar do .record
+//     'Content-Type': 'application/json'
+//   }
+// });
+
+
 export const api = axios.create({
-  baseURL: 'https://api.jsonbin.io/v3/b/69a8839143b1c97be9b396bc',
+  // O Vite usa import.meta.env para ler as variáveis
+  baseURL: `https://api.jsonbin.io/v3/b/${import.meta.env.VITE_JSONBIN_ID}`,
   headers: {
-    'X-Master-Key': '$2b$10$apRIu09wR5tmKKJDSBbv/umKs23JlM4Rqy17snJlgdOa0UEMEsI3S', 
-    'X-Bin-Meta': 'false', // Isso faz os dados virem puros, sem precisar do .record
+    'X-Master-Key': import.meta.env.VITE_JSONBIN_KEY,
+    'X-Bin-Meta': 'false',
     'Content-Type': 'application/json'
   }
 });
-
